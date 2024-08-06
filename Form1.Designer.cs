@@ -35,6 +35,8 @@
             timer1 = new System.Windows.Forms.Timer(components);
             label2 = new Label();
             label3 = new Label();
+            label4 = new Label();
+            timer2 = new System.Windows.Forms.Timer(components);
             SuspendLayout();
             // 
             // label1
@@ -90,6 +92,24 @@
             label3.TabIndex = 3;
             label3.Text = "label3";
             // 
+            // label4
+            // 
+            label4.AutoSize = true;
+            label4.BackColor = Color.Transparent;
+            label4.Font = new Font("Cascadia Mono ExtraLight", 10F, FontStyle.Regular, GraphicsUnit.Point);
+            label4.ForeColor = Color.FromArgb(218, 63, 61);
+            label4.Location = new Point(12, 362);
+            label4.Name = "label4";
+            label4.Size = new Size(233, 27);
+            label4.TabIndex = 4;
+            label4.Text = "Attendance System";
+            label4.Visible = false;
+            // 
+            // timer2
+            // 
+            timer2.Interval = 300;
+            timer2.Tick += timer2_Tick;
+            // 
             // Att_Enterance
             // 
             AutoScaleDimensions = new SizeF(11F, 25F);
@@ -98,6 +118,7 @@
             BackgroundImage = (Image)resources.GetObject("$this.BackgroundImage");
             BackgroundImageLayout = ImageLayout.Stretch;
             ClientSize = new Size(800, 450);
+            Controls.Add(label4);
             Controls.Add(label3);
             Controls.Add(label2);
             Controls.Add(button1);
@@ -117,5 +138,7 @@
         private System.Windows.Forms.Timer timer1;
         private Label label2;
         private Label label3;
+        private Label label4;
+        private System.Windows.Forms.Timer timer2;
     }
 }

@@ -59,9 +59,9 @@ namespace Atendance_System
             reader.CaptureAsync(DPUruNet.Constants.Formats.Fid.ANSI, DPUruNet.Constants.CaptureProcessing.DP_IMG_PROC_DEFAULT, reader.Capabilities.Resolutions[0]);
         }
         private void StoreFmdInDatabase(byte[] fmdBytes, string Xml)
-        {  
+        {
             string joining_Date = DateTime.Now.ToString("F");
-            string _name= enroll_Form.getName();
+            string _name = enroll_Form.getName();
             Console.WriteLine(_name);
             bool is_enrolled = false;
             string cs = "Data Source=DESKTOP-1907SQ5;Initial Catalog=Attendance;Integrated Security=True";
@@ -168,7 +168,8 @@ namespace Atendance_System
         private void OnCaptured(CaptureResult captureResult)
         {
             int matchedID = isMatched(captureResult);
-            if (matchedID > 0) {
+            if (matchedID > 0)
+            {
                 Console.WriteLine($"Matched and is {matchedID}");
             }
             else if (enroll_Form == null || enroll_Form.IsDisposed)
@@ -275,9 +276,45 @@ namespace Atendance_System
             con.Close();
             return -1;
         }
-        public void attendanceLog (int ID, string name)
+        public void attendanceLog(int ID, string name)
         {
-            Console.WriteLine($"NAME: {name}\nID:{ID}");
+            // Ensure label update is done on the UI thread
+            if (label4.InvokeRequired)
+            {
+                label4.Invoke(new Action(() =>
+                {
+                    label4.Text = $"{name} checked in at {DateTime.Now.ToString("f")}";
+                    label4.Visible = true;
+                    timer2.Interval = 3000; // Display for 3 seconds
+                    timer2.Start();
+                }));
+            }
+            else
+            {
+                label4.Text = $"{name} checked in at {DateTime.Now.ToString("f")}";
+                label4.Visible = true;
+                timer2.Interval = 3000; // Display for 3 seconds
+                timer2.Start();
+            }
         }
+
+        private void timer2_Tick(object sender, EventArgs e)
+        {
+            // Ensure label update is done on the UI thread
+            if (label4.InvokeRequired)
+            {
+                label4.Invoke(new Action(() =>
+                {
+                    label4.Visible = false;
+                    timer2.Stop(); // Stop the timer after the label is hidden
+                }));
+            }
+            else
+            {
+                label4.Visible = false;
+                timer2.Stop(); // Stop the timer after the label is hidden
+            }
+        }
+
     }
 }
