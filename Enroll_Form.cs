@@ -23,7 +23,7 @@ namespace Atendance_System
         public void button1_Click(object sender, EventArgs e)
         {
             this.Close();
-            parent_Enterance.reader.Dispose();
+            //parent_Enterance.reader.Dispose();
             parent_Enterance.Show();
         }
 
@@ -80,7 +80,7 @@ namespace Atendance_System
             {
                 this.Close();
                 Console.WriteLine("Enroll Form is closed");
-                parent_Enterance.reader.Dispose();
+                //parent_Enterance.reader.Dispose();
                 parent_Enterance.Show();
 
             }
@@ -95,7 +95,7 @@ namespace Atendance_System
         }
 
         private void timer1_Tick(object sender, EventArgs e)
-        {
+        {   
             closeForm();
         }
     }

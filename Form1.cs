@@ -30,6 +30,7 @@ namespace Atendance_System
         }
         private void Form1_Load(object sender, EventArgs e)
         {
+
             timer1.Start();
             if (reader != null)
                 label3.Text = $"Reader Detected: {reader.Description.SerialNumber}";
@@ -37,6 +38,7 @@ namespace Atendance_System
             {
                 label3.Text = $"Reader not detected";
             }
+            startCapture();
         }
 
         private void timer1_Tick(object sender, EventArgs e)
@@ -50,15 +52,15 @@ namespace Atendance_System
                 MessageBox.Show("Reader not initialized.");
                 return;
             }
-
             reader.Open(DPUruNet.Constants.CapturePriority.DP_PRIORITY_EXCLUSIVE);
 
             reader.On_Captured += new Reader.CaptureCallback(OnCaptured);
-            // event is subscribed to event handler( callback delegate )=>as onCaptured has same sig as of the delegate CaptureCallback
+            // event is subscribed to event handler( callback delegate )=>as onCaptured has same sign as of the delegate CaptureCallback
             reader.CaptureAsync(DPUruNet.Constants.Formats.Fid.ANSI, DPUruNet.Constants.CaptureProcessing.DP_IMG_PROC_DEFAULT, reader.Capabilities.Resolutions[0]);
         }
         private void StoreFmdInDatabase(byte[] fmdBytes, string Xml)
-        {   string joining_Date = DateTime.Now.ToString("F");
+        {  
+            string joining_Date = DateTime.Now.ToString("F");
             string _name= enroll_Form.getName();
             Console.WriteLine(_name);
             bool is_enrolled = false;
@@ -132,6 +134,7 @@ namespace Atendance_System
             }
 
             con.Close();
+
         }
 
         //Helper method to create a bitmap from the raw image data
@@ -164,68 +167,117 @@ namespace Atendance_System
         }
         private void OnCaptured(CaptureResult captureResult)
         {
-            //isMatched(captureResult);
-            DisplayCapture displayCapture = enroll_Form._displayCapture; // delegate subscription
-            DataResult<Fmd> resultConversion = FeatureExtraction.CreateFmdFromFid(captureResult.Data, DPUruNet.Constants.Formats.Fmd.ANSI);
-            Console.WriteLine($"{resultConversion.Data.ViewCount} ==> resultConversionCount");
-
-            foreach (Fid.Fiv view in captureResult.Data.Views)
-            {
-                Bitmap bitmap = CreateBitmap(view.RawImage, view.Width, view.Height);
-                displayCapture(bitmap);
+            int matchedID = isMatched(captureResult);
+            if (matchedID > 0) {
+                Console.WriteLine($"Matched and is {matchedID}");
             }
-            if (resultConversion.ResultCode != DPUruNet.Constants.ResultCode.DP_SUCCESS)
+            else if (enroll_Form == null || enroll_Form.IsDisposed)
             {
-                MessageBox.Show(resultConversion.ResultCode.ToString());
+                MessageBox.Show("Finger not enrolled yet");
                 return;
             }
-
-
-
-            if (captureResult.ResultCode != DPUruNet.Constants.ResultCode.DP_SUCCESS)
+            else
             {
-                MessageBox.Show("-Error: " + captureResult.ResultCode);
-                return;
-            }
 
-            preEnrollment.Add(resultConversion.Data);
-            Console.WriteLine($"{preEnrollment.Count} ==> PreEnrollCount");
-            count++;
+                DisplayCapture displayCapture = enroll_Form._displayCapture; // delegate subscription
+                DataResult<Fmd> resultConversion = FeatureExtraction.CreateFmdFromFid(captureResult.Data, DPUruNet.Constants.Formats.Fmd.ANSI);
+                Console.WriteLine($"{resultConversion.Data.ViewCount} ==> resultConversionCount");
 
-
-            //if (count >= 2) // Create enrollment does not need it, as I will not create an Enrollment Till the Data Minutae is Enough
-            {
-                DataResult<Fmd> resultEnrollment = Enrollment.CreateEnrollmentFmd(DPUruNet.Constants.Formats.Fmd.ANSI, preEnrollment);
-                Console.WriteLine($"{resultEnrollment.ResultCode}  ==> ResultEnrollment Code");
-                if (resultEnrollment.ResultCode == DPUruNet.Constants.ResultCode.DP_SUCCESS)
+                foreach (Fid.Fiv view in captureResult.Data.Views)
                 {
-                    string Xml = Fmd.SerializeXml(resultEnrollment.Data);
-                    Console.WriteLine(Xml);
-                    Fmd check = Fmd.DeserializeXml(Xml);
-                    Console.WriteLine($"{check.Width} = {resultEnrollment.Data.Width}");
-                    StoreFmdInDatabase(resultEnrollment.Data.Bytes, Xml);
-
-                    preEnrollment.Clear();
-                    count = 0;
+                    Bitmap bitmap = CreateBitmap(view.RawImage, view.Width, view.Height);
+                    displayCapture(bitmap);
                 }
-                else if (resultEnrollment.ResultCode == DPUruNet.Constants.ResultCode.DP_ENROLLMENT_INVALID_SET)
+                if (resultConversion.ResultCode != DPUruNet.Constants.ResultCode.DP_SUCCESS)
                 {
-                    Console.WriteLine($"-Error in Enrollment");
-                    preEnrollment.Clear();
-                    count = 0;
+                    MessageBox.Show(resultConversion.ResultCode.ToString());
+                    return;
+                }
+
+
+
+                if (captureResult.ResultCode != DPUruNet.Constants.ResultCode.DP_SUCCESS)
+                {
+                    MessageBox.Show("-Error: " + captureResult.ResultCode);
+                    return;
+                }
+
+                preEnrollment.Add(resultConversion.Data);
+                Console.WriteLine($"{preEnrollment.Count} ==> PreEnrollCount");
+                count++;
+
+
+                //if (count >= 2) // Create enrollment does not need it, as I will not create an Enrollment Till the Data Minutae is Enough
+                {
+                    DataResult<Fmd> resultEnrollment = Enrollment.CreateEnrollmentFmd(DPUruNet.Constants.Formats.Fmd.ANSI, preEnrollment);
+                    Console.WriteLine($"{resultEnrollment.ResultCode}  ==> ResultEnrollment Code");
+                    if (resultEnrollment.ResultCode == DPUruNet.Constants.ResultCode.DP_SUCCESS)
+                    {
+                        string Xml = Fmd.SerializeXml(resultEnrollment.Data);
+                        Console.WriteLine(Xml);
+                        Fmd check = Fmd.DeserializeXml(Xml);
+                        Console.WriteLine($"{check.Width} = {resultEnrollment.Data.Width}");
+                        StoreFmdInDatabase(resultEnrollment.Data.Bytes, Xml);
+
+                        preEnrollment.Clear();
+                        count = 0;
+                    }
+                    else if (resultEnrollment.ResultCode == DPUruNet.Constants.ResultCode.DP_ENROLLMENT_INVALID_SET)
+                    {
+                        Console.WriteLine($"-Error in Enrollment");
+                        preEnrollment.Clear();
+                        count = 0;
+                    }
                 }
             }
         }
 
         private void button1_Click(object sender, EventArgs e)
         {
-            startCapture();
+            //startCapture();
             this.Hide();
             if (enroll_Form == null || enroll_Form.IsDisposed)
             {
                 enroll_Form = new Enroll_Form(this);
             }
             enroll_Form.Show();
+        }
+        private int isMatched(CaptureResult captureResult)
+        {
+            DataResult<Fmd> dataResult = FeatureExtraction.CreateFmdFromFid(captureResult.Data, DPUruNet.Constants.Formats.Fmd.ANSI);
+            string cs = "Data Source=DESKTOP-1907SQ5;Initial Catalog=Attendance;Integrated Security=True";
+            SqlConnection con = new SqlConnection(cs);
+            //string Query = "Select Emp_Id,Emp_Fmd from Employees";
+            string Query = "Select * from Employees";
+            SqlCommand cmd = new SqlCommand(Query, con);
+            con.Open();
+            SqlDataReader dr = cmd.ExecuteReader();
+            while (dr.Read())
+            {
+                string Xml = dr["Emp_Fmd"].ToString();
+                CompareResult compareResult = Comparison.Compare(dataResult.Data, 0, Fmd.DeserializeXml(Xml), 0);
+                if (compareResult.Score < PROBABILITY_ONE / 100000)
+                {
+                    Console.ForegroundColor = ConsoleColor.Blue;
+                    Console.WriteLine("Matched");
+                    Console.WriteLine($"ID :{dr["Emp_Id"]} is already enrolled.");
+                    Console.WriteLine($"ID :{dr["Emp_Name"]} is already enrolled.");
+
+                    Console.ResetColor();
+                    attendanceLog(Convert.ToInt32(dr["Emp_Id"]), Convert.ToString(dr["Emp_Name"]));
+                    return (Convert.ToInt32(dr["Emp_Id"]));
+                }
+                else
+                {
+                    Console.WriteLine($"\tChecking {dr["Emp_Id"]}");
+                }
+            }
+            con.Close();
+            return -1;
+        }
+        public void attendanceLog (int ID, string name)
+        {
+            Console.WriteLine($"NAME: {name}\nID:{ID}");
         }
     }
 }
