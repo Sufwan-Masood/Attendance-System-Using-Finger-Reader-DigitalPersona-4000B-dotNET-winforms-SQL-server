@@ -1,0 +1,36 @@
+C:\Users\GOLDEN\source\repos\Atendance System\bin\Debug\net6.0-windows\Atendance System.exe
+C:\Users\GOLDEN\source\repos\Atendance System\bin\Debug\net6.0-windows\Atendance System.dll.config
+C:\Users\GOLDEN\source\repos\Atendance System\bin\Debug\net6.0-windows\Atendance System.deps.json
+C:\Users\GOLDEN\source\repos\Atendance System\bin\Debug\net6.0-windows\Atendance System.runtimeconfig.json
+C:\Users\GOLDEN\source\repos\Atendance System\bin\Debug\net6.0-windows\Atendance System.dll
+C:\Users\GOLDEN\source\repos\Atendance System\bin\Debug\net6.0-windows\Atendance System.pdb
+C:\Users\GOLDEN\source\repos\Atendance System\bin\Debug\net6.0-windows\DPCtlUruNet.dll
+C:\Users\GOLDEN\source\repos\Atendance System\bin\Debug\net6.0-windows\DPCtlXUru.dll
+C:\Users\GOLDEN\source\repos\Atendance System\bin\Debug\net6.0-windows\DPUruNet.dll
+C:\Users\GOLDEN\source\repos\Atendance System\bin\Debug\net6.0-windows\DPXUru.dll
+C:\Users\GOLDEN\source\repos\Atendance System\bin\Debug\net6.0-windows\DPCtlUruNet.xml
+C:\Users\GOLDEN\source\repos\Atendance System\bin\Debug\net6.0-windows\DPCtlXUru.xml
+C:\Users\GOLDEN\source\repos\Atendance System\bin\Debug\net6.0-windows\DPUruNet.xml
+C:\Users\GOLDEN\source\repos\Atendance System\bin\Debug\net6.0-windows\DPXUru.xml
+C:\Users\GOLDEN\source\repos\Atendance System\obj\Debug\net6.0-windows\Atendance System.csproj.AssemblyReference.cache
+C:\Users\GOLDEN\source\repos\Atendance System\obj\Debug\net6.0-windows\Atendance System.csproj.ResolveComReference.cache
+C:\Users\GOLDEN\source\repos\Atendance System\obj\Debug\net6.0-windows\Atendance System.csproj.GenerateResource.cache
+C:\Users\GOLDEN\source\repos\Atendance System\obj\Debug\net6.0-windows\Atendance System.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\GOLDEN\source\repos\Atendance System\obj\Debug\net6.0-windows\Atendance System.AssemblyInfoInputs.cache
+C:\Users\GOLDEN\source\repos\Atendance System\obj\Debug\net6.0-windows\Atendance System.AssemblyInfo.cs
+C:\Users\GOLDEN\source\repos\Atendance System\obj\Debug\net6.0-windows\Atendance System.csproj.CoreCompileInputs.cache
+C:\Users\GOLDEN\source\repos\Atendance System\obj\Debug\net6.0-windows\Atendance System.csproj.CopyComplete
+C:\Users\GOLDEN\source\repos\Atendance System\obj\Debug\net6.0-windows\Atendance System.dll
+C:\Users\GOLDEN\source\repos\Atendance System\obj\Debug\net6.0-windows\refint\Atendance System.dll
+C:\Users\GOLDEN\source\repos\Atendance System\obj\Debug\net6.0-windows\Atendance System.pdb
+C:\Users\GOLDEN\source\repos\Atendance System\obj\Debug\net6.0-windows\Atendance System.genruntimeconfig.cache
+C:\Users\GOLDEN\source\repos\Atendance System\obj\Debug\net6.0-windows\ref\Atendance System.dll
+C:\Users\GOLDEN\source\repos\Atendance System\obj\Debug\net6.0-windows\Atendance_System.Att_Enterance.resources
+C:\Users\GOLDEN\source\repos\Atendance System\obj\Debug\net6.0-windows\Atendance_System.Properties.Resources.resources
+C:\Users\GOLDEN\source\repos\Atendance System\obj\Debug\net6.0-windows\Atendance_System.Enroll_Form.resources
+C:\Users\GOLDEN\source\repos\Atendance System\bin\Debug\net6.0-windows\System.Data.SqlClient.dll
+C:\Users\GOLDEN\source\repos\Atendance System\bin\Debug\net6.0-windows\runtimes\win-arm64\native\sni.dll
+C:\Users\GOLDEN\source\repos\Atendance System\bin\Debug\net6.0-windows\runtimes\win-x64\native\sni.dll
+C:\Users\GOLDEN\source\repos\Atendance System\bin\Debug\net6.0-windows\runtimes\win-x86\native\sni.dll
+C:\Users\GOLDEN\source\repos\Atendance System\bin\Debug\net6.0-windows\runtimes\unix\lib\netcoreapp2.1\System.Data.SqlClient.dll
+C:\Users\GOLDEN\source\repos\Atendance System\bin\Debug\net6.0-windows\runtimes\win\lib\netcoreapp2.1\System.Data.SqlClient.dll
