@@ -1,3 +1,5 @@
+using System.Runtime.InteropServices;
+
 namespace Atendance_System
 {
     internal static class Program
@@ -11,7 +13,12 @@ namespace Atendance_System
             // To customize application configuration such as set high DPI settings or default font,
             // see https://aka.ms/applicationconfiguration.
             ApplicationConfiguration.Initialize();
-            Application.Run(new Att_Enterance());
+            Att_Enterance entranceOBJ = new Att_Enterance();
+            Login_form login_FormOBJ = new Login_form(entranceOBJ);
+            Application.Run(login_FormOBJ);
+           
         }
+
+
     }
 }
