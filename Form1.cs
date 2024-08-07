@@ -9,6 +9,7 @@ namespace Atendance_System
 {
     public partial class Att_Enterance : Form
     {
+        string cs = "Data Source=DESKTOP-1907SQ5;Initial Catalog=Attendance;Integrated Security=True";
         public delegate void DisplayCapture(Bitmap bitmap);
         public delegate void CloseMessage(string closeMessage);
         Enroll_Form enroll_Form;
@@ -169,8 +170,9 @@ namespace Atendance_System
         {
             int matchedID = isMatched(captureResult);
             if (matchedID > 0)
-            {
-                Console.WriteLine($"Matched and is {matchedID}");
+            {   
+                Console.WriteLine($"Matched ID => {matchedID}");
+                return;
             }
             else if (enroll_Form == null || enroll_Form.IsDisposed)
             {
@@ -246,7 +248,6 @@ namespace Atendance_System
         private int isMatched(CaptureResult captureResult)
         {
             DataResult<Fmd> dataResult = FeatureExtraction.CreateFmdFromFid(captureResult.Data, DPUruNet.Constants.Formats.Fmd.ANSI);
-            string cs = "Data Source=DESKTOP-1907SQ5;Initial Catalog=Attendance;Integrated Security=True";
             SqlConnection con = new SqlConnection(cs);
             //string Query = "Select Emp_Id,Emp_Fmd from Employees";
             string Query = "Select * from Employees";
@@ -262,10 +263,10 @@ namespace Atendance_System
                     Console.ForegroundColor = ConsoleColor.Blue;
                     Console.WriteLine("Matched");
                     Console.WriteLine($"ID :{dr["Emp_Id"]} is already enrolled.");
-                    Console.WriteLine($"ID :{dr["Emp_Name"]} is already enrolled.");
+                    Console.WriteLine($"Name :{dr["Emp_Name"]} is already enrolled.");
 
                     Console.ResetColor();
-                    attendanceLog(Convert.ToInt32(dr["Emp_Id"]), Convert.ToString(dr["Emp_Name"]));
+                    attendanceLog(Convert.ToInt32(dr["Emp_Id"]), Convert.ToString(dr["Emp_Name"])); // attendance LOG
                     return (Convert.ToInt32(dr["Emp_Id"]));
                 }
                 else
@@ -278,20 +279,60 @@ namespace Atendance_System
         }
         public void attendanceLog(int ID, string name)
         {
+            string ?labelMessage = null;
+            SqlConnection con = new SqlConnection(cs);
+            string currentDate = DateAndTime.Now.ToString("d");
+            string query = "select Id , _Date from Attendances where Id = @id AND _Date = @date";
+            SqlCommand cmd = new SqlCommand(query, con);
+            cmd.Parameters.AddWithValue("@id", ID);
+            cmd.Parameters.AddWithValue("@date", currentDate);
+            con.Open();
+            SqlDataReader dr =  cmd.ExecuteReader();
+            if (dr.HasRows) {
+                dr.Close();
+                string query2 = "update Attendances set CheckOUT = @checkOut where Id = @id and _Date = @date";
+                SqlCommand cmd2 = new SqlCommand(query2, con);
+                cmd2.Parameters.AddWithValue("@checkOut", DateTime.Now.ToString("t"));
+                cmd2.Parameters.AddWithValue("@Id", ID);
+                cmd2.Parameters.AddWithValue("@date", currentDate);
+                labelMessage = $"{name} checked OUT at {DateTime.Now.ToString("f")}";
+                int status=  cmd2.ExecuteNonQuery();
+                if (status > 0) {
+                    Console.WriteLine($"{name} checkedOut at {DateTime.Now.ToString("t")}");
+                }
+                
+            }
+            else
+            {
+                dr.Close();
+                string query3 = "Insert into Attendances(Id,_Date,checkIN) values (@id , @date, @checkIn )";
+                SqlCommand cmd3 = new SqlCommand( query3, con);
+                cmd3.Parameters.AddWithValue("@id", ID);
+                cmd3.Parameters.AddWithValue("@date", currentDate);
+                cmd3.Parameters.AddWithValue("@checkIn",  DateTime.Now.ToString("t"));
+                labelMessage = $"{name} checked IN at {DateTime.Now.ToString("f")}";
+                int status = cmd3.ExecuteNonQuery();
+                if (status > 0)
+                {
+                    Console.WriteLine($"{name} checkedIn at {DateTime.Now.ToString("t")}");
+                }
+            }
+            con.Close();
+
             // Ensure label update is done on the UI thread
             if (label4.InvokeRequired)
             {
                 label4.Invoke(new Action(() =>
                 {
-                    label4.Text = $"{name} checked in at {DateTime.Now.ToString("f")}";
+                    label4.Text = labelMessage;
                     label4.Visible = true;
                     timer2.Interval = 3000; // Display for 3 seconds
                     timer2.Start();
-                }));
+                }  ));
             }
             else
             {
-                label4.Text = $"{name} checked in at {DateTime.Now.ToString("f")}";
+                label4.Text = labelMessage;
                 label4.Visible = true;
                 timer2.Interval = 3000; // Display for 3 seconds
                 timer2.Start();
