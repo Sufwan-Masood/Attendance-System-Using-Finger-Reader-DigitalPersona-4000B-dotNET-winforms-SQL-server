@@ -10,6 +10,7 @@ namespace Atendance_System
 {
     public partial class Att_Enterance : Form
     {
+        int adminMAtched;
         public static bool dbPermission;
         string cs = "Data Source=DESKTOP-1907SQ5;Initial Catalog=Attendance;Integrated Security=True";
         public delegate void DisplayCapture(Bitmap bitmap);
@@ -245,6 +246,7 @@ namespace Atendance_System
             else
             {
                 Console.WriteLine("Login Required");
+                 adminMAtched = isMatchedAdmin(captureResult);
             }
         }
 
@@ -351,9 +353,37 @@ namespace Atendance_System
                 timer2.Start();
             }
         }
-        public bool isAdmin()
+        public int isMatchedAdmin(CaptureResult captureResult)
         {
-            return true;
+            DataResult<Fmd> dataResult = FeatureExtraction.CreateFmdFromFid(captureResult.Data, DPUruNet.Constants.Formats.Fmd.ANSI);
+            SqlConnection con = new SqlConnection(cs);
+            //string Query = "Select Emp_Id,Emp_Fmd from Employees";
+            string Query = "Select * from Admin";
+            SqlCommand cmd = new SqlCommand(Query, con);
+            con.Open();
+            SqlDataReader dr = cmd.ExecuteReader();
+            while (dr.Read())
+            {
+                string Xml = dr["admin_finger"].ToString();
+                CompareResult compareResult = Comparison.Compare(dataResult.Data, 0, Fmd.DeserializeXml(Xml), 0);
+                if (compareResult.Score < PROBABILITY_ONE / 100000)
+                {
+                    Console.ForegroundColor = ConsoleColor.Yellow;
+                    Console.WriteLine("Matched");
+                    Console.WriteLine($"ID :{dr["admin_id"]} .");
+                    Console.WriteLine($"Name :{dr["admin_name"]} admin found.");
+
+                    Console.ResetColor();
+                    //attendanceLog(Convert.ToInt32(dr["Emp_Id"]), Convert.ToString(dr["Emp_Name"])); // attendance LOG
+                    return (Convert.ToInt32(dr["admin_id"]));
+                }
+                else
+                {
+                    Console.WriteLine($"\tChecking {dr["admin_id"]}");
+                }
+            }
+            con.Close();
+            return -1;
         }
 
         private void timer2_Tick(object sender, EventArgs e)
@@ -374,5 +404,18 @@ namespace Atendance_System
             }
         }
 
+        public bool isAdmin()
+        {
+            if (adminMAtched > 0)
+            {
+                return true;
+                
+            }
+            else
+            { 
+                return false;
+            }
+                
+        }
     }
 }

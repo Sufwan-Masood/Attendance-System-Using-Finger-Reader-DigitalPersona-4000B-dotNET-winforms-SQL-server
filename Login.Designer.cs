@@ -129,9 +129,9 @@
 
         private Label label1;
         private Label label2;
-        private TextBox textBox1;
         private Label label3;
-        private TextBox textBox2;
         private Button button1;
+        public TextBox textBox1;
+        public TextBox textBox2;
     }
 }
