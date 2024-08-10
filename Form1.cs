@@ -10,6 +10,7 @@ namespace Atendance_System
 {
     public partial class Att_Enterance : Form
     {
+       public static Bitmap? _bitmap;
         int adminMAtched;
         public static bool dbPermission;
         string cs = "Data Source=DESKTOP-1907SQ5;Initial Catalog=Attendance;Integrated Security=True";
@@ -356,6 +357,11 @@ namespace Atendance_System
         public int isMatchedAdmin(CaptureResult captureResult)
         {
             DataResult<Fmd> dataResult = FeatureExtraction.CreateFmdFromFid(captureResult.Data, DPUruNet.Constants.Formats.Fmd.ANSI);
+            
+            foreach (Fid.Fiv view in captureResult.Data.Views)
+            {
+                 _bitmap = CreateBitmap(view.RawImage, view.Width, view.Height);
+            }
             SqlConnection con = new SqlConnection(cs);
             //string Query = "Select Emp_Id,Emp_Fmd from Employees";
             string Query = "Select * from Admin";
@@ -404,18 +410,17 @@ namespace Atendance_System
             }
         }
 
-        public bool isAdmin()
+        public int isAdmin()
         {
             if (adminMAtched > 0)
             {
-                return true;
-                
+                return adminMAtched;
             }
             else
             { 
-                return false;
-            }
-                
-        }
+                return -1;
+            }    
+        } 
+
     }
 }
