@@ -40,6 +40,8 @@
             errorProvider2 = new ErrorProvider(components);
             pictureBox1 = new PictureBox();
             timer1 = new System.Windows.Forms.Timer(components);
+            Insights_button = new Button();
+            Attendance_Button = new Button();
             ((System.ComponentModel.ISupportInitialize)errorProvider1).BeginInit();
             ((System.ComponentModel.ISupportInitialize)errorProvider2).BeginInit();
             ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
@@ -103,10 +105,10 @@
             // 
             // button1
             // 
-            button1.BackColor = Color.FromArgb(43, 168, 178);
+            button1.BackColor = Color.FromArgb(163, 102, 255);
             button1.Font = new Font("Microsoft Himalaya", 22F, FontStyle.Bold, GraphicsUnit.Point);
             button1.ForeColor = Color.Gainsboro;
-            button1.Location = new Point(644, 396);
+            button1.Location = new Point(557, 353);
             button1.Name = "button1";
             button1.Size = new Size(144, 42);
             button1.TabIndex = 6;
@@ -138,6 +140,34 @@
             // 
             timer1.Tick += timer1_Tick;
             // 
+            // Insights_button
+            // 
+            Insights_button.BackColor = Color.FromArgb(50, 170, 178);
+            Insights_button.Font = new Font("Microsoft Himalaya", 22F, FontStyle.Bold, GraphicsUnit.Point);
+            Insights_button.ForeColor = Color.Gainsboro;
+            Insights_button.Location = new Point(443, 401);
+            Insights_button.Name = "Insights_button";
+            Insights_button.Size = new Size(171, 42);
+            Insights_button.TabIndex = 8;
+            Insights_button.Text = "Insights";
+            Insights_button.UseVisualStyleBackColor = false;
+            Insights_button.Visible = false;
+            Insights_button.Click += Insights_button_Click;
+            // 
+            // Attendance_Button
+            // 
+            Attendance_Button.BackColor = Color.FromArgb(50, 170, 178);
+            Attendance_Button.Font = new Font("Microsoft Himalaya", 22F, FontStyle.Bold, GraphicsUnit.Point);
+            Attendance_Button.ForeColor = Color.Gainsboro;
+            Attendance_Button.Location = new Point(620, 401);
+            Attendance_Button.Name = "Attendance_Button";
+            Attendance_Button.Size = new Size(171, 42);
+            Attendance_Button.TabIndex = 9;
+            Attendance_Button.Text = "Attendance";
+            Attendance_Button.UseVisualStyleBackColor = false;
+            Attendance_Button.Visible = false;
+            Attendance_Button.Click += Attendance_Button_Click;
+            // 
             // Login_form
             // 
             AutoScaleDimensions = new SizeF(11F, 25F);
@@ -146,6 +176,8 @@
             BackgroundImage = (Image)resources.GetObject("$this.BackgroundImage");
             BackgroundImageLayout = ImageLayout.Center;
             ClientSize = new Size(800, 450);
+            Controls.Add(Attendance_Button);
+            Controls.Add(Insights_button);
             Controls.Add(pictureBox1);
             Controls.Add(button1);
             Controls.Add(textBox2);
@@ -176,5 +208,7 @@
         private ErrorProvider errorProvider2;
         private PictureBox pictureBox1;
         private System.Windows.Forms.Timer timer1;
+        private Button Attendance_Button;
+        private Button Insights_button;
     }
 }

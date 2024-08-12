@@ -14,6 +14,7 @@ namespace Atendance_System
 {
     public partial class Login_form : Form
     {
+        Insights insights;
         int _adminID;
         [DllImport("kernel32.dll")] private static extern bool AllocConsole();
         public Att_Enterance parent_enterance;
@@ -25,26 +26,26 @@ namespace Atendance_System
             AllocConsole();
         }
 
-        private void button1_Click(object sender, EventArgs e)
-        {
-            bool is_admin = false;
-            _adminID = parent_enterance.isAdmin(); //matches finger
-            if (_adminID > 0)
-            {
-                is_admin = true;
-            }
-            bool idPassMatched = id_pass_isMatched(); // matches Id and Password
-            if (!is_admin) { Console.WriteLine("Admin Finger does not Match"); }
-            if (!idPassMatched) { Console.WriteLine("Admin ID/Password does not Match"); }
-            if (is_admin && idPassMatched)
-            {
-                parent_enterance.Show();
-                this.Hide();
-                Att_Enterance.dbPermission = true;  // make this true when login is successfull
-            }
-            else
-                MessageBox.Show("Admin Credentials Not Matched", "Login Failure", MessageBoxButtons.OK, MessageBoxIcon.Error);
-        }
+        //private void button1_Click(object sender, EventArgs e)
+        //{
+        //    bool is_admin = false;
+        //    _adminID = parent_enterance.isAdmin(); //matches finger
+        //    if (_adminID > 0)
+        //    {
+        //        is_admin = true;
+        //    }
+        //    bool idPassMatched = id_pass_isMatched(); // matches Id and Password
+        //    if (!is_admin) { Console.WriteLine("Admin Finger does not Match"); }
+        //    if (!idPassMatched) { Console.WriteLine("Admin ID/Password does not Match"); }
+        //    if (is_admin && idPassMatched)
+        //    {
+        //        parent_enterance.Show();
+        //        this.Hide();
+        //        Att_Enterance.dbPermission = true;  // make this true when login is successfull
+        //    }
+        //    else
+        //        MessageBox.Show("Admin Credentials Not Matched", "Login Failure", MessageBoxButtons.OK, MessageBoxIcon.Error);
+        //}
         public bool id_pass_isMatched()
         {
             SqlConnection con = new SqlConnection(cs);
@@ -95,14 +96,7 @@ namespace Atendance_System
                 //MessageBox.Show("Press OK after placing your finger on the Reader");
                 button1.Visible = true;
             }
-            //if (Att_Enterance._bitmap != null)
-            //{
 
-            //    pictureBox1.Image = Att_Enterance._bitmap;
-            //    pictureBox1.SizeMode = PictureBoxSizeMode.StretchImage;
-            //}
-            //else
-            //    MessageBox.Show("Bitmap is null now");
         }
 
         private void Login_form_Load(object sender, EventArgs e)
@@ -118,6 +112,57 @@ namespace Atendance_System
                 pictureBox1.Image = Att_Enterance._bitmap;
                 pictureBox1.SizeMode = PictureBoxSizeMode.StretchImage;
             }
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            bool loggedIn = loginButtonCheck();
+            if (loggedIn == true)
+            {
+                button1.Visible = false;
+                Insights_button.Visible = true;
+                Attendance_Button.Visible = true;
+            }
+        }
+        private bool loginButtonCheck()
+        {
+            bool is_admin = false;
+            _adminID = parent_enterance.isAdmin(); //matches finger
+            if (_adminID > 0)
+            {
+                is_admin = true;
+            }
+            bool idPassMatched = id_pass_isMatched(); // matches Id and Password
+            if (!is_admin) { Console.WriteLine("Admin Finger does not Match"); }
+            if (!idPassMatched) { Console.WriteLine("Admin ID/Password does not Match"); }
+            if (is_admin && idPassMatched)
+            {
+                MessageBox.Show("Logged in as Admin", "Login Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                return true;
+
+            }
+            else
+            {
+                MessageBox.Show("Admin Credentials Not Matched", "Login Failure", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return false;
+            }
+        }
+
+        private void Attendance_Button_Click(object sender, EventArgs e)
+        {
+            parent_enterance.Show();
+            this.Hide();
+            Att_Enterance.dbPermission = true;  // make this true when login is successfull
+        }
+
+        private void Insights_button_Click(object sender, EventArgs e)
+        {
+            if (insights== null || insights.IsDisposed)
+            {
+                insights = new Insights();
+            }
+            this.Hide();
+            insights.Show();
         }
     }
 }
