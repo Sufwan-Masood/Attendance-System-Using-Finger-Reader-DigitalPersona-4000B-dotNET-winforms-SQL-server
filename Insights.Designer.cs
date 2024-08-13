@@ -36,6 +36,7 @@
             label2 = new Label();
             label3 = new Label();
             button2 = new Button();
+            button3 = new Button();
             ((System.ComponentModel.ISupportInitialize)dataGridView1).BeginInit();
             ((System.ComponentModel.ISupportInitialize)dataGridView2).BeginInit();
             SuspendLayout();
@@ -125,9 +126,22 @@
             button2.Name = "button2";
             button2.Size = new Size(284, 95);
             button2.TabIndex = 10;
-            button2.Text = "Download";
+            button2.Text = "Download Data of Employee";
             button2.UseVisualStyleBackColor = false;
             button2.Click += button2_Click;
+            // 
+            // button3
+            // 
+            button3.BackColor = Color.FromArgb(163, 102, 255);
+            button3.Font = new Font("Microsoft JhengHei Light", 12F, FontStyle.Regular, GraphicsUnit.Point);
+            button3.ForeColor = Color.Gainsboro;
+            button3.Location = new Point(957, 567);
+            button3.Name = "button3";
+            button3.Size = new Size(284, 95);
+            button3.TabIndex = 11;
+            button3.Text = "Download Data of All Employees";
+            button3.UseVisualStyleBackColor = false;
+            button3.Click += button3_Click;
             // 
             // Insights
             // 
@@ -136,6 +150,7 @@
             BackgroundImage = (Image)resources.GetObject("$this.BackgroundImage");
             BackgroundImageLayout = ImageLayout.Stretch;
             ClientSize = new Size(1290, 797);
+            Controls.Add(button3);
             Controls.Add(button2);
             Controls.Add(label3);
             Controls.Add(label2);
@@ -162,5 +177,6 @@
         private Label label2;
         private Label label3;
         private Button button2;
+        private Button button3;
     }
 }

@@ -107,7 +107,7 @@ namespace Atendance_System
                     worksheet.Cell(currentRow, 2).Value = "Check-In";
                     worksheet.Cell(currentRow, 3).Value = "Check-Out";
 
-                    
+
                     // Adding Data
                     while (dr.Read())
                     {
@@ -124,14 +124,70 @@ namespace Atendance_System
                 }
             }
         }
+        private void exportToExcel()
+        {
+            string name = "Null";
+            string query = @"Select e.Emp_Name, a._Date as Date,a.CheckIN,a.CheckOUT from Attendances as a  Join Employees as e on a.Id = e.Emp_Id and a.id = @id";
+            string query1 = "SELECT a._Date AS Date, a.CheckIN, a.CheckOUT FROM Attendances AS a JOIN Employees AS e ON a.Id = e.Emp_Id WHERE a.Id = @id";
+            //string Query = @"Select e.Emp_Id,e.Emp_Name,e.Emp_Joining as Employee_Joining_Date, a._Date as Date,a.CheckIN,a.CheckOUT,e.Emp_Fmd as FingerPrint from Attendances as a  Join Employees as e on a.Id = e.Emp_Id order by Emp_Id";
+            string Query = @"Select e.Emp_Id,e.Emp_Name,e.Emp_Joining, a._Date ,a.CheckIN,a.CheckOUT,e.Emp_Fmd from Attendances as a  Join Employees as e on a.Id = e.Emp_Id order by Emp_Id";
+
+            using (SqlConnection con = new SqlConnection(cs))
+            {
+                SqlCommand cmd = new SqlCommand(Query, con);
+                //cmd.Parameters.AddWithValue("@id", id);
+                con.Open();
+                SqlDataReader dr = cmd.ExecuteReader();
+
+                using (var workbook = new XLWorkbook())
+                {
+                    var worksheet = workbook.Worksheets.Add("Employees Data");
+                    int currentRow = 1;
+
+                    // Adding Headers
+                    worksheet.Cell(currentRow, 1).Value = "Employee ID";
+                    worksheet.Cell(currentRow, 2).Value = "Employee Name";
+                    worksheet.Cell(currentRow, 3).Value = "Employee Joining Date";
+                    worksheet.Cell(currentRow, 4).Value = "Date";
+                    worksheet.Cell(currentRow, 5).Value = "Check In";
+                    worksheet.Cell(currentRow, 6).Value = "Check Out";
+                    worksheet.Cell(currentRow, 7).Value = "Finger Minutae";
+
+
+                    // Adding Data
+                    while (dr.Read())
+                    {
+                        //name = dr["Emp_Name"].ToString();
+                        currentRow++;
+                        worksheet.Cell(currentRow, 1).Value = dr["Emp_Id"] != DBNull.Value ? dr["Emp_Id"].ToString() : string.Empty;
+                        worksheet.Cell(currentRow, 2).Value = dr["Emp_Name"] != DBNull.Value ? dr["Emp_Name"].ToString() : string.Empty;
+                        worksheet.Cell(currentRow, 3).Value = dr["Emp_Joining"] != DBNull.Value ? dr["Emp_Joining"].ToString() : string.Empty;
+                        worksheet.Cell(currentRow, 4).Value = dr["_Date"] != DBNull.Value ? dr["_Date"].ToString() : string.Empty;
+                        worksheet.Cell(currentRow, 5).Value = dr["CheckIN"] != DBNull.Value ? dr["CheckIN"].ToString() : string.Empty;
+                        worksheet.Cell(currentRow, 6).Value = dr["CheckOUT"] != DBNull.Value ? dr["CheckOUT"].ToString() : string.Empty;
+                        worksheet.Cell(currentRow, 7).Value = dr["Emp_Fmd"] != DBNull.Value ? dr["Emp_Fmd"].ToString() : string.Empty;
+                    }
+
+                    dr.Close();
+                    workbook.SaveAs($"All_Employees.xlsx");
+                    MessageBox.Show($"Data has been exported to All_Employees.xlsx successfully!", "Export Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
+            }
+        }
 
         private void button2_Click(object sender, EventArgs e)
         {
-            try {
+            try
+            {
                 exportToExcel(int.Parse(dataGridView1.SelectedRows[0].Cells[0].Value.ToString()));
             }
             catch { }
-           
+
+        }
+
+        private void button3_Click(object sender, EventArgs e)
+        {
+            exportToExcel();
         }
     }
 }

@@ -24,7 +24,7 @@ namespace Atendance_System
             Insights insights = new Insights();
             Att_Enterance entranceOBJ = new Att_Enterance();
             Login_form login_FormOBJ = new Login_form(entranceOBJ);
-            Application.Run(insights);
+            Application.Run(login_FormOBJ);
         }
 
 
