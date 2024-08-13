@@ -159,7 +159,7 @@ namespace Atendance_System
         {
             if (insights== null || insights.IsDisposed)
             {
-                insights = new Insights();
+                insights = new Insights(this);
             }
             this.Hide();
             insights.Show();
